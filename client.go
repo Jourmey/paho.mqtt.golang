@@ -398,7 +398,7 @@ func (c *client) attemptConnection() (net.Conn, byte, bool, error) {
 		}
 
 		// Now we perform the MQTT connection handshake
-		rc, sessionPresent, err = connectMQTT(conn, cm, protocolVersion, c.options.VerifyConnACK)
+		rc, sessionPresent, err = connectMQTT(conn, cm, protocolVersion, c.options.IgnoreVerifyConnACK)
 		if rc == packets.Accepted {
 			if err := conn.SetDeadline(time.Time{}); err != nil {
 				ERROR.Println(CLI, "reset deadline following handshake ", err)

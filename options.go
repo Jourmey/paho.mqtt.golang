@@ -105,7 +105,7 @@ type ClientOptions struct {
 	Dialer                  *net.Dialer
 	CustomOpenConnectionFn  OpenConnectionFunc
 	AutoAckDisabled         bool
-	VerifyConnACK           bool // 新增配置 connect时 是否需要VerifyConnACK
+	IgnoreVerifyConnACK     bool // 新增配置 connect时 是否忽略VerifyConnACK
 }
 
 // NewClientOptions will create a new ClientClientOptions type with some
@@ -459,8 +459,8 @@ func (o *ClientOptions) SetAutoAckDisabled(autoAckDisabled bool) *ClientOptions 
 	return o
 }
 
-// SetVerifyConnACK 设置是否需要 VerifyConnACK
-func (o *ClientOptions) SetVerifyConnACK(verifyConnACK bool) *ClientOptions {
-	o.VerifyConnACK = verifyConnACK
+// SetIgnoreVerifyConnACK 设置是否忽略VerifyConnACK
+func (o *ClientOptions) SetIgnoreVerifyConnACK(ignoreVerifyConnACK bool) *ClientOptions {
+	o.IgnoreVerifyConnACK = ignoreVerifyConnACK
 	return o
 }
