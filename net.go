@@ -39,12 +39,12 @@ const closedNetConnErrorText = "use of closed network connection" // error strin
 // protocolVersion - The protocol version to attempt to connect with
 //
 // Note that, for backward compatibility, ConnectMQTT() suppresses the actual connection error (compare to connectMQTT()).
-func ConnectMQTT(conn net.Conn, cm *packets.ConnectPacket, protocolVersion uint) (byte, bool) {
-	rc, sessionPresent, _ := connectMQTT(conn, cm, protocolVersion)
+func ConnectMQTT(conn net.Conn, cm *packets.ConnectPacket, protocolVersion uint, verifyConnACK bool) (byte, bool) {
+	rc, sessionPresent, _ := connectMQTT(conn, cm, protocolVersion, verifyConnACK)
 	return rc, sessionPresent
 }
 
-func connectMQTT(conn io.ReadWriter, cm *packets.ConnectPacket, protocolVersion uint) (byte, bool, error) {
+func connectMQTT(conn io.ReadWriter, cm *packets.ConnectPacket, protocolVersion uint, verifyConnACK bool) (byte, bool, error) {
 	switch protocolVersion {
 	case 3:
 		DEBUG.Println(CLI, "Using MQTT 3.1 protocol")
@@ -67,6 +67,11 @@ func connectMQTT(conn io.ReadWriter, cm *packets.ConnectPacket, protocolVersion 
 	if err := cm.Write(conn); err != nil {
 		ERROR.Println(CLI, err)
 		return packets.ErrNetworkError, false, err
+	}
+
+	// 忽略 ConnACK
+	if verifyConnACK {
+		return 0, false, nil
 	}
 
 	rc, sessionPresent, err := verifyCONNACK(conn)
